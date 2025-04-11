@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito y Pago</title>
+</head>
+<body>
+   <a href="index.html">
+        <button>Cancelar</button>
+    </a>
+  <h1>Resumen del Carrito</h1>
+
+  <div id="carrito-lista"></div>
+  <div>--------------------------</div>
+  <div id="total">Total: $0</div>
+
+  <h2>Pago</h2>
+  <form onsubmit="procesarPago(event)">
+    <input type="text" id="nombre" placeholder="Nombre en tarjeta" required><br>
+    <input type="text" id="tarjeta" placeholder="Número de tarjeta" required><br>
+    <input type="month" id="vencimiento" required><br>
+    <input type="text" id="cvv" placeholder="CVV" required><br>
+    <button type="submit">Pagar</button>
+  </form>
+
+  <script>
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    function mostrarCarrito() {
+      const lista = document.getElementById('carrito-lista');
+      lista.innerHTML = '';
+      let total = 0;
+
+      carrito.forEach((item) => {
+        const div = document.createElement('div');
+        div.textContent = `${item.nombre} - $${item.precio}`;
+        lista.appendChild(div);
+        total += item.precio;
+      });
+
+      document.getElementById('total').textContent = `Total: $${total}`;
+    }
+
+    function procesarPago(event) {
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const total = carrito.reduce((suma, item) => suma + item.precio, 0);
+      alert(`Gracias ${nombre}, tu pago de $${total} fue exitoso.`);
+
+      // Limpiar carrito después del pago
+      localStorage.removeItem('carrito');
+    }
+
+    mostrarCarrito();
+  </script>
+</body>
+</html>
